@@ -19,39 +19,55 @@ function autickoJede(lw: number = 0, rw: number = 0) {
     PCAmotor.MotorRun(PCAmotor.Motors.M1, -lw);
     PCAmotor.MotorRun(PCAmotor.Motors.M4, rw);
 }
-function doleva() {
-    PCAmotor.MotorRun(PCAmotor.Motors.M1, 110)
-    PCAmotor.MotorRun(PCAmotor.Motors.M4, -255)
-}
 
-function doprava() {
-    PCAmotor.MotorRun(PCAmotor.Motors.M1, 255)
-    PCAmotor.MotorRun(PCAmotor.Motors.M4, -80)
-}
-
-function stat() {
-    PCAmotor.MotorRun(PCAmotor.Motors.M1, 0)
-    PCAmotor.MotorRun(PCAmotor.Motors.M4, 0)
-}
 basic.forever(() => {
- //   if (radioMessage2 === 128) {
- //       autickoJede(0, 0);
+   if (radioMessage2 === 128) {
+       autickoJede(0, 0);
 
-   /* } else */ if (radioMessage2 >= 176) {
+    } else  if (radioMessage2 >= 129 && radioMessage1 >= 129) {
         const speed = (radioMessage2 - 128) * 2;
-        autickoJede(speed, speed);
+        let equality = speed / 6;
+        let slow = (radioMessage1 - 128) * 2;
 
-    } else if (radioMessage2 <= 80) {
+
+
+       let finalSpeed = speed - slow
+       autickoJede(speed, finalSpeed)
+
+    }   else if (radioMessage2 >= 129 && radioMessage1 <= 127) {
+        const speed = (radioMessage2 - 128) * 2;
+        let equality = speed / 6; // regulace cuz pravej motor je silnejsi
+        let slow = (128 - radioMessage1) * 2;
+
+
+
+       autickoJede(speed - slow, speed - equality)
+
+   } else if (radioMessage2 <= 127 && radioMessage1 >= 129) {
         const speedR = (128 - radioMessage2) * -2;
-        autickoJede(speedR, speedR)
-    } else if (radioMessage1 > 150) {
-        doprava()
-    } else if (radioMessage1 < 100) {
-        doleva()
-   } else if (radioMessage1 === 128 || radioMessage2 === 128) {
-        stat()
+        let equality = speedR / 6;
+        let slowR = (radioMessage1 - 128) * 2;
+
+
+        let finalSpeed = speedR - slowR
+       autickoJede(speedR, finalSpeed)
+
+   } else if (radioMessage2 <= 127 && radioMessage1 <= 127) {
+       const speedR = (128 - radioMessage2) * -2;
+       let equality = speedR / 6;
+       let slowR = (128 - radioMessage1) * 2;
+
+
+
+       autickoJede(speedR - slowR, speedR)
    }
 
 
 
 }); // rovně doleva, dozadu doleva, rovně doprava, dozadu doprava
+/* else if (radioMessage1 > 150) {
+        doprava()
+    } else if (radioMessage1 < 100) {
+        doleva()
+   } else if (radioMessage1 === 128 || radioMessage2 === 128) {
+        stat() */
