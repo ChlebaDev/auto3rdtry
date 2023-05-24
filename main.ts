@@ -19,37 +19,39 @@ function autickoJede(lw: number = 0, rw: number = 0) {
     PCAmotor.MotorRun(PCAmotor.Motors.M1, -lw);
     PCAmotor.MotorRun(PCAmotor.Motors.M4, rw);
 }
+function doleva() {
+    PCAmotor.MotorRun(PCAmotor.Motors.M1, 110)
+    PCAmotor.MotorRun(PCAmotor.Motors.M4, -255)
+}
 
+function doprava() {
+    PCAmotor.MotorRun(PCAmotor.Motors.M1, 255)
+    PCAmotor.MotorRun(PCAmotor.Motors.M4, -80)
+}
+
+function stat() {
+    PCAmotor.MotorRun(PCAmotor.Motors.M1, 0)
+    PCAmotor.MotorRun(PCAmotor.Motors.M4, 0)
+}
 basic.forever(() => {
-    if (radioMessage2 === 128) {
-        autickoJede(0, 0);
+ //   if (radioMessage2 === 128) {
+ //       autickoJede(0, 0);
 
-    } else if (radioMessage2 === 0) {
-        autickoJede(-255, -215);
-
-    } else if (radioMessage2 === 255) {
-        autickoJede(255, 215)
-
-    } else if (radioMessage2 >= 129) {
+   /* } else */ if (radioMessage2 >= 176) {
         const speed = (radioMessage2 - 128) * 2;
-        const equality = speed / 6;
-        autickoJede(speed, speed - equality);
+        autickoJede(speed, speed);
 
-    } else if (radioMessage2 <= 127) {
+    } else if (radioMessage2 <= 80) {
         const speedR = (128 - radioMessage2) * -2;
-        const equalityR = speedR / 6;
-        autickoJede(speedR, speedR + equalityR);
-    } 
+        autickoJede(speedR, speedR)
+    } else if (radioMessage1 > 150) {
+        doprava()
+    } else if (radioMessage1 < 100) {
+        doleva()
+   } else if (radioMessage1 === 128 || radioMessage2 === 128) {
+        stat()
+   }
 
 
 
-
-
-
-
-
-
-
-
-
-});
+}); // rovně doleva, dozadu doleva, rovně doprava, dozadu doprava
